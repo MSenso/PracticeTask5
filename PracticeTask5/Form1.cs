@@ -75,6 +75,8 @@ namespace PracticeTask5
         {
             if (e.KeyCode == Keys.Enter)
             {
+                // (sender as TextBox).Text.Replace(',', '.');
+                Controls.Find((sender as TextBox).Name, false)[0].Text = Controls.Find((sender as TextBox).Name, false)[0].Text.Replace('.', ',');
                 if (B_Cells == null)
                 {
                     if (double.TryParse(Controls.Find("TextBox" + current_index.ToString(), false)[0].Text, out matrix[current_index / size, current_index % size]))
@@ -203,44 +205,47 @@ namespace PracticeTask5
                 b_values = null;
             }
         }
-        bool Convert_From_File()
+        void Convert_From_File()
         {
             string[] lines = Read_FromFile();
             if (lines != null)
             {
                 size = lines.Length;
-                matrix = new double[size, size];
-                bool is_correct = true;
-                for (int i = 0; i < lines.Length && is_correct; i++)
+                if (size <= 20 && size >= 2)
                 {
-                    string[] value_lines = lines[i].Replace('.', ',').Split(' ');
-                    if (value_lines.Length != size) is_correct = false;
-                    for (int j = 0; j < size && is_correct; j++)
+                    matrix = new double[size, size];
+                    bool is_correct = true;
+                    for (int i = 0; i < lines.Length && is_correct; i++)
                     {
-                        is_correct = double.TryParse(value_lines[j], out matrix[i, j]);
+                        string[] value_lines = lines[i].Replace('.', ',').Split(' ');
+                        if (value_lines.Length != size) is_correct = false;
+                        for (int j = 0; j < size && is_correct; j++)
+                        {
+                            is_correct = double.TryParse(value_lines[j], out matrix[i, j]);
+                        }
                     }
-                }
-                if (!is_correct)
-                {
-                    matrix = null;
-                    size = 0;
-                    MessageBox.Show("Файл содержит некорректные данные!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
+                    if (!is_correct)
+                    {
+                        matrix = null;
+                        size = 0;
+                        MessageBox.Show("Файл содержит некорректные данные!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        InputLabel.Text = "Матрица из файла: ";
+                        InputLabel.Visible = true;
+                        Generate_Visual_Matrix(true);
+                        Calculate_B_Values();
+                    }
                 }
                 else
                 {
-                    InputLabel.Text = "Матрица из файла: ";
-                    InputLabel.Visible = true;
-                    Generate_Visual_Matrix(true);
-                    Calculate_B_Values();
-                    return true;
+                    MessageBox.Show("Размер матрицы должен быть от 2 до 20!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            else return false;
         }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            bool is_correct_input = true;
             Remove_Visual_Matrix();
             Remove_B_Cells();
             InputLabel.Visible = false;
@@ -249,7 +254,7 @@ namespace PracticeTask5
                 SizeChoice.Visible = false;
                 InputSize.Visible = false;
                 InputLabel.Visible = false;
-                is_correct_input = Convert_From_File();
+                Convert_From_File();
             }
             else if (comboBox1.SelectedItem.ToString() == "Ввод вручную")
             {
@@ -268,14 +273,14 @@ namespace PracticeTask5
         {
             if (e.KeyCode == Keys.Enter)
             {
-                if (int.TryParse(InputSize.Text, out size) && size >= 2)
+                if (int.TryParse(InputSize.Text, out size) && size >= 2 && size <= 20)
                 {
                     InputLabel.Text = "Введите данные в таблицу:";
                     InputLabel.Visible = true;
                     matrix = new double[size, size];
                     Generate_Visual_Matrix(false);
                 }
-                else MessageBox.Show("Введите натуральное число, превосходящее 1!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                else MessageBox.Show("Введите натуральное число от 2 до 20!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 e.SuppressKeyPress = true;
             }
 
