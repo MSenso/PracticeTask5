@@ -32,8 +32,11 @@
             this.SizeChoice = new System.Windows.Forms.Label();
             this.InputSize = new System.Windows.Forms.TextBox();
             this.InputLabel = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.ввестиВручнуюToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ввестиИзФайлаToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // SizeChoice
@@ -72,23 +75,36 @@
             this.InputLabel.Text = "Заполните матрицу:";
             this.InputLabel.Visible = false;
             // 
-            // comboBox1
-            // 
-            this.comboBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(245)))), ((int)(((byte)(248)))));
-            this.comboBox1.Font = new System.Drawing.Font("Segoe Print", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Ввод вручную",
-            "Ввод из файла"});
-            this.comboBox1.Location = new System.Drawing.Point(12, 12);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(164, 41);
-            this.comboBox1.TabIndex = 6;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ввестиВручнуюToolStripMenuItem,
+            this.ввестиИзФайлаToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(503, 41);
+            this.menuStrip1.TabIndex = 7;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // ввестиВручнуюToolStripMenuItem
+            // 
+            this.ввестиВручнуюToolStripMenuItem.Font = new System.Drawing.Font("Segoe Print", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ввестиВручнуюToolStripMenuItem.Name = "ввестиВручнуюToolStripMenuItem";
+            this.ввестиВручнуюToolStripMenuItem.Size = new System.Drawing.Size(250, 37);
+            this.ввестиВручнуюToolStripMenuItem.Text = "Ввести вручную       ";
+            this.ввестиВручнуюToolStripMenuItem.Click += new System.EventHandler(this.ввестиВручнуюToolStripMenuItem_Click);
+            // 
+            // ввестиИзФайлаToolStripMenuItem
+            // 
+            this.ввестиИзФайлаToolStripMenuItem.Font = new System.Drawing.Font("Segoe Print", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ввестиИзФайлаToolStripMenuItem.Name = "ввестиИзФайлаToolStripMenuItem";
+            this.ввестиИзФайлаToolStripMenuItem.Size = new System.Drawing.Size(203, 37);
+            this.ввестиИзФайлаToolStripMenuItem.Text = "Ввести из файла";
+            this.ввестиИзФайлаToolStripMenuItem.Click += new System.EventHandler(this.ввестиИзФайлаToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -97,16 +113,20 @@
             this.AutoScroll = true;
             this.BackgroundImage = global::PracticeTask5.Properties.Resources.background;
             this.ClientSize = new System.Drawing.Size(503, 568);
-            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.InputLabel);
             this.Controls.Add(this.InputSize);
             this.Controls.Add(this.SizeChoice);
+            this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.MaximumSize = new System.Drawing.Size(1181, 827);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Последовательность b";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -116,8 +136,10 @@
         private System.Windows.Forms.Label SizeChoice;
         private System.Windows.Forms.TextBox InputSize;
         private System.Windows.Forms.Label InputLabel;
-        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem ввестиВручнуюToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ввестиИзФайлаToolStripMenuItem;
     }
 }
 

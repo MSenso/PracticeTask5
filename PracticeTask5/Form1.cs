@@ -26,8 +26,6 @@ namespace PracticeTask5
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBox1.Focus();
             SizeChoice.Visible = false;
             InputSize.Visible = false;
             InputLabel.Visible = false;
@@ -244,26 +242,6 @@ namespace PracticeTask5
                 }
             }
         }
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Remove_Visual_Matrix();
-            Remove_B_Cells();
-            InputLabel.Visible = false;
-            if (comboBox1.SelectedItem.ToString() == "Ввод из файла")
-            {
-                SizeChoice.Visible = false;
-                InputSize.Visible = false;
-                InputLabel.Visible = false;
-                Convert_From_File();
-            }
-            else if (comboBox1.SelectedItem.ToString() == "Ввод вручную")
-            {
-                SizeChoice.Visible = true;
-                InputSize.Visible = true;
-                InputSize.Focus();
-            }
-        }
-
         private void textBox3_KeyDown(object sender, KeyEventArgs e)
         {
 
@@ -292,5 +270,25 @@ namespace PracticeTask5
             if (B_Cells != null) Remove_B_Cells();
         }
 
+        private void ввестиВручнуюToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Remove_Visual_Matrix();
+            Remove_B_Cells();
+            InputLabel.Visible = false;
+            SizeChoice.Visible = true;
+            InputSize.Visible = true;
+            InputSize.Focus();
+        }
+
+        private void ввестиИзФайлаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Remove_Visual_Matrix();
+            Remove_B_Cells();
+            InputLabel.Visible = false;
+            SizeChoice.Visible = false;
+            InputSize.Visible = false;
+            InputLabel.Visible = false;
+            Convert_From_File();
+        }
     }
 }
