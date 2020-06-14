@@ -13,8 +13,8 @@ namespace PracticeTask5
 {
     public partial class Form1 : Form
     {
-        double[,] matrix;
-        int size;
+        public double[,] matrix;
+        public int size;
         int[] b_values;
         TextBox[] B_Cells;
         TextBox[,] Matrix_Cells;
@@ -30,7 +30,7 @@ namespace PracticeTask5
             InputSize.Visible = false;
             InputLabel.Visible = false;
         }
-        string[] Read_FromFile()
+        string[] Read_FromFile() // Чтение из файла
         {
             openFileDialog1 = new OpenFileDialog();
             openFileDialog1.Title = "Открытие текстового файла";
@@ -40,107 +40,105 @@ namespace PracticeTask5
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string filename = openFileDialog1.FileName;
+                string path = Path.GetDirectoryName(openFileDialog1.FileName);
                 filelines = File.ReadAllLines(filename);
             }
             return filelines;
         }
-        void Generate_Visual_Matrix(bool is_from_file)
+        public void Generate_Visual_Matrix(bool is_from_file) // Отображение матрицы на экране
         {
             Matrix_Cells = new TextBox[size, size];
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
                 {
-                    Matrix_Cells[i, j] = new TextBox()
+                    Matrix_Cells[i, j] = new TextBox() // Каждый элемент матрицы представляется в текстбоксе
                     {
                         Size = new Size(39, 34),
                         Location = new Point(19 + (39 + 5) * j, (137 + (34 + 5) * i)),
                         Name = "TextBox" + (i * size + j).ToString(),
                         
                     };
-                    if (is_from_file)
+                    if (is_from_file) // Если матрица из файла
                     {
                         Matrix_Cells[i, j].Text = matrix[i, j].ToString();
                         Matrix_Cells[i, j].ReadOnly = true;
                     }
                     Controls.Add(Matrix_Cells[i, j]);
-                    Matrix_Cells[i, j].KeyDown += new KeyEventHandler(this.KeyDown);
+                    Matrix_Cells[i, j].KeyDown += new KeyEventHandler(this.KeyDown); // Подписка на событие нажатия клавиши
                 }
             }
             Controls.Find(Matrix_Cells[0, 0].Name, false)[0].Focus();
         }
         new void KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter) // Нажат энтер
             {
-                // (sender as TextBox).Text.Replace(',', '.');
-                Controls.Find((sender as TextBox).Name, false)[0].Text = Controls.Find((sender as TextBox).Name, false)[0].Text.Replace('.', ',');
-                if (B_Cells == null)
+                Controls.Find((sender as TextBox).Name, false)[0].Text = Controls.Find((sender as TextBox).Name, false)[0].Text.Replace('.', ','); // Замена в тексте точки на запятую для корректного парса строки
+                if (B_Cells == null) // Первый раз работы программы
                 {
-                    if (double.TryParse(Controls.Find("TextBox" + current_index.ToString(), false)[0].Text, out matrix[current_index / size, current_index % size]))
+                    if (double.TryParse(Controls.Find("TextBox" + current_index.ToString(), false)[0].Text, out matrix[current_index / size, current_index % size])) // Парс текста текстбокса в заданный элемент матрицы
                     {
-                        current_index++;
+                        current_index++; // Индекс текущего текстбокса матрицы увеличен
                         string next_name = "TextBox" + current_index.ToString();
                         if (Controls.ContainsKey(next_name))
                         {
-                            Controls.Find(next_name, false)[0].Focus();
+                            Controls.Find(next_name, false)[0].Focus(); // Переключение на следующий элемент
                         }
-                        else Calculate_B_Values();
+                        else Calculate_B_Values(); // Подсчет
                     }
                     else MessageBox.Show("Некорректный ввод числа!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
-                    int index = int.Parse(string.Join(string.Empty, (sender as TextBox).Name.Where(ch => char.IsDigit(ch)).ToArray()));
-                   if (double.TryParse((sender as TextBox).Text, out matrix[index / size, index % size]))
+                    int index = int.Parse(string.Join(string.Empty, (sender as TextBox).Name.Where(ch => char.IsDigit(ch)).ToArray())); // Получение индекса текущего текстбокса
+                    if (double.TryParse((sender as TextBox).Text, out matrix[index / size, index % size])) // Парс строки в элемент матрицы с текущим индексом
                     {
-                        Calculate_B_Values();
+                        Calculate_B_Values(); // Подсчет
                     }
                     else MessageBox.Show("Некорректный ввод числа!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 e.SuppressKeyPress = true;
             }
         }
-        bool Raising_Sequence(int row_index)
+        bool Raising_Sequence(int row_index) // Проверка возрастающей последовательности
         {
-            bool is_raising = true;
-            for(int j = 1; j < size && is_raising == true; j++)
+            for(int j = 1; j < size; j++)
             {
                 if (matrix[row_index, j] <= matrix[row_index, j - 1])
                 {
-                    is_raising = false;
+                    return false; // Текущий элемент не превосходит предыдущий, поэтому это не возрастающая последовательность
                 }
             }
-            return is_raising;
+            return true;
         }
-        bool Descending_Sequence(int row_index)
+        bool Descending_Sequence(int row_index) // Проверка убывающей последовательности
         {
-            bool is_descending = true;
-            for (int j = 1; j < size && is_descending == true; j++)
+            for (int j = 1; j < size; j++)
             {
                 if (matrix[row_index, j] >= matrix[row_index, j - 1])
                 {
-                    is_descending = false;
+                    return false; // Текущий элемент не меньше предыдущего, поэтому это не возрастающая последовательность
                 }
             }
-            return is_descending;
+            return true;
         }
-        void Calculate_B_Values()
+        public void Calculate_B_Values() // Подсчет элементов последовательности b
         {
-            b_values = new int[size];
+            b_values = new int[size]; // Элементов столько же, сколько и строк в матрице
             for(int i = 0; i < size; i++)
             {
-                if (Raising_Sequence(i) || Descending_Sequence(i))
+                if (Raising_Sequence(i) || Descending_Sequence(i)) // Если возрастающая или убывающая последовательность
                     b_values[i] = 1;
                 else b_values[i] = 0;
             }
             Print_B_Values();
         }
-        void Print_B_Values()
+        void Print_B_Values() // Вывод последовательности на экран
         {
-            if (B_Cells == null)
+            if (B_Cells == null) // Последовательность еще не была выведена
             {
-                B_Cells = new TextBox[size];
+                B_Cells = new TextBox[size]; // Последовательность выводится массивом текстбоксов
                 Label B_Label = new Label()
                 {
                     Text = "Последовательность b:",
@@ -170,70 +168,70 @@ namespace PracticeTask5
             {
                 for (int i = 0; i < size; i++)
                 {
-                    B_Cells[i].Text = b_values[i].ToString();
+                    B_Cells[i].Text = b_values[i].ToString(); // У текущего текстбокса обновляется текст
                 }
             }
         }
-        void Remove_Visual_Matrix()
+        public void Remove_Visual_Matrix() // Удаление матрицы с формы
         {
-            if (Matrix_Cells != null)
+            if (Matrix_Cells != null) // Если еще не удалена
             {
                 for (int i = 0; i < size; i++)
                 {
                     for (int j = 0; j < size; j++)
                     {
-                        Controls.Remove(Matrix_Cells[i, j]);
+                        Controls.Remove(Matrix_Cells[i, j]); // Очищение от каждого тексбокса матрицы
                     }
                 }
-                Matrix_Cells = null;
+                Matrix_Cells = null; //Обнуление
                 matrix = null;
                 current_index = 0;
             }
         }
-        void Remove_B_Cells()
+        public void Remove_B_Cells() // Удаление последовательности с формы
         {
-            if (B_Cells != null)
+            if (B_Cells != null) // Если еще не удалена
             {
                 for (int i = 0; i < size; i++)
                 {
-                    Controls.Remove(B_Cells[i]);
+                    Controls.Remove(B_Cells[i]); // Очищение от каждого тексбокса матрицы
                 }
-                Controls.RemoveByKey("B_Label");
-                B_Cells = null;
+                Controls.RemoveByKey("B_Label"); // Удаление подписи к последовательности
+                B_Cells = null; // Обнуление
                 b_values = null;
             }
         }
-        void Convert_From_File()
+        public void Convert_From_File() // Считывание из файла
         {
             string[] lines = Read_FromFile();
-            if (lines != null)
+            if (lines != null) // Не пустой файл
             {
-                size = lines.Length;
-                if (size <= 20 && size >= 2)
+                size = lines.Length; // Количество строк
+                if (size <= 20 && size >= 2) // Размер от 2 до 20
                 {
                     matrix = new double[size, size];
                     bool is_correct = true;
                     for (int i = 0; i < lines.Length && is_correct; i++)
                     {
-                        string[] value_lines = lines[i].Replace('.', ',').Split(' ');
-                        if (value_lines.Length != size) is_correct = false;
+                        string[] value_lines = lines[i].Replace('.', ',').Split(' '); // Разбиение строки на подстроки чисел
+                        if (value_lines.Length != size) is_correct = false; // Количество чисел в строке не равно количеству строк, матрица не квадратная
                         for (int j = 0; j < size && is_correct; j++)
                         {
-                            is_correct = double.TryParse(value_lines[j], out matrix[i, j]);
+                            is_correct = double.TryParse(value_lines[j], out matrix[i, j]); // Парс строки в элемент матрицы
                         }
                     }
-                    if (!is_correct)
+                    if (!is_correct) // Некорректный ввод
                     {
-                        matrix = null;
+                        matrix = null; // Обнуление
                         size = 0;
                         MessageBox.Show("Файл содержит некорректные данные!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else
                     {
-                        InputLabel.Text = "Матрица из файла: ";
+                        InputLabel.Text = "Матрица из файла: "; 
                         InputLabel.Visible = true;
-                        Generate_Visual_Matrix(true);
-                        Calculate_B_Values();
+                        Generate_Visual_Matrix(true); // Вывод матрицы
+                        Calculate_B_Values(); // Подсчет
                     }
                 }
                 else
@@ -249,14 +247,14 @@ namespace PracticeTask5
 
         private void InputSize_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (e.KeyCode == Keys.Enter) // Нажат энтер
             {
-                if (int.TryParse(InputSize.Text, out size) && size >= 2 && size <= 20)
+                if (int.TryParse(InputSize.Text, out size) && size >= 2 && size <= 20) // Введено целое число от 2 до 20
                 {
                     InputLabel.Text = "Введите данные в таблицу:";
                     InputLabel.Visible = true;
                     matrix = new double[size, size];
-                    Generate_Visual_Matrix(false);
+                    Generate_Visual_Matrix(false); // Генерация текстбоксов матрицы для заполнения
                 }
                 else MessageBox.Show("Введите натуральное число от 2 до 20!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 e.SuppressKeyPress = true;
@@ -266,12 +264,13 @@ namespace PracticeTask5
 
         private void InputSize_TextChanged(object sender, EventArgs e)
         {
-            if (Matrix_Cells != null) Remove_Visual_Matrix();
-            if (B_Cells != null) Remove_B_Cells();
+            if (Matrix_Cells != null) Remove_Visual_Matrix(); // Очищение от матрицы
+            if (B_Cells != null) Remove_B_Cells(); // Очищение от последовательности
         }
 
         private void ввестиВручнуюToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Очищение формы
             Remove_Visual_Matrix();
             Remove_B_Cells();
             InputLabel.Visible = false;
@@ -282,6 +281,7 @@ namespace PracticeTask5
 
         private void ввестиИзФайлаToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Очищение формы
             Remove_Visual_Matrix();
             Remove_B_Cells();
             InputLabel.Visible = false;
